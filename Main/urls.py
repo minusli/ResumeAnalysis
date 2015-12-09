@@ -19,5 +19,5 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^searchDimension/$', 'dimension.views.searchDimension')
+    url(r'^search_dimension_by_cvid/$', 'dimension.views.search_dimension_by_cvid')
 ]
