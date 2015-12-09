@@ -1,0 +1,6 @@
+离线计算在analysis.py中
+在线接口在views.py中
+
+注意在计算完成后，要给维度库添加索引，resume_id, cv_id, source
+
+
