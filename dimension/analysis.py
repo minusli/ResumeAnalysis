@@ -17,17 +17,11 @@ avg_months = 28.8504280074
 
 
 def cal_dimension():
-    in_mongo = pymongo.Connection(settings.MongoConf.resume_host, settings.MongoConf.resume_port)
-    in_mongo["admin"].authenticate("admin", "abc@123")
-    in_mongo.safe = True
+    in_mongo = settings.MongoConf.resume_mongo
+    out_mongo = settings.MongoConf.dimension_mongo
 
-    in_table = in_mongo[settings.MongoConf.resume_db][settings.MongoConf.resume_table]
-
-    out_mongo = pymongo.Connection(settings.MongoConf.dimension_host, settings.MongoConf.dimension_port)
-    out_mongo["admin"].authenticate("admin", "abc@123")
-    out_mongo.safe = True
-
-    out_table = out_mongo[settings.MongoConf.dimension_db][settings.MongoConf.dimension_table]
+    in_table = settings.MongoConf.resume_collection
+    out_table = settings.MongoConf.dimension_collection
 
     today = datetime.datetime.today()
     temp_count = 0
