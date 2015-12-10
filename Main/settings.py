@@ -1,3 +1,4 @@
+# coding: utf-8
 """
 Django settings for ResumeAnalysis project.
 
@@ -102,16 +103,35 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+import pymongo
+
 
 class MongoConf:
+    """mongodb 配置文件"""
+    # 简历库mongo配置
     resume_host = "171.221.173.155"
     resume_port = 27017
     resume_db = "xunying_resume"
     resume_table = "resume_4_1_v3"
+    resume_user = "admin"
+    resume_password = "abc@123"
 
+    # 维度库mongo配置
     dimension_host = "171.221.173.155"
     dimension_port = 27017
     dimension_db = "dimension"
     dimension_table = "dimension"
+    dimension_user = "admin"
+    dimension_password = "abc@123"
 
+    # 授权简历库
+    resume_mongo = pymongo.Connection(resume_host, resume_port)
+    resume_mongo["admin"].authenticate(resume_user, resume_password)
+    resume_mongo.safe = True
+    resume_collection = resume_mongo[resume_db][resume_table]
 
+    # 授权维度库
+    dimension_mongo = pymongo.Connection(dimension_host, dimension_port)
+    dimension_mongo["admin"].authenticate(dimension_user, dimension_password)
+    dimension_mongo.safe = True
+    dimension_collection = dimension_mongo[dimension_db][dimension_table]
