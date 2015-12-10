@@ -6,6 +6,7 @@ from django.http.response import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from extract_tags import find_resume_by_id
 from loadFile.constant_position import ConstantPosition
+from utils import json_return
 
 category_keywords = ConstantPosition.category_keywords
 
@@ -16,26 +17,26 @@ def resume_tag(request):
         son = {}
         try:
             tag_list = []
-            code = "0000"
+            flag = True
             cv_id = request.POST.get("cv_id")
             source = request.POST.get("source")
             type = request.POST.get("type")
             doc = find_resume_by_id(cv_id, source)
             if doc:
                 tag_list = getResumeTag(doc, type)
-                msg = "successful"
+                msg = "SUCCESS"
             else:
-                code = "0001"
+                flag = False
                 msg = "current resume is missing."
-            son["code"] = code
+            son["flag"] = flag
             son["msg"] = msg
             son["tag_list"] = tag_list
-        except:
-            son = {"code": "0002", "msg": "program exception", "tag_list": []}
+        except Exception, e:
+            son["flag"] = False
+            son["msg"] = "program exception:"+str(e)
+            son["tag_list"] = []
             traceback.print_exc()
-
-        re = json.dumps(son)
-        return HttpResponse(re)
+        return json_return.json_return(son["flag"], son["msg"], son["tag_list"])
 
 
 def getResumeTag(doc, type):
