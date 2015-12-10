@@ -20,5 +20,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^get_dimension/$', 'dimension.views.get_dimension'),
-    url(r'^cal_dimension/$', 'dimension.views.cal_dimension')
+    url(r'^cal_dimension/$', 'dimension.views.cal_dimension'),
+
+    url(r'^resume_tag/$', 'keywords.views.resume_tag'),
 ]
