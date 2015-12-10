@@ -110,6 +110,7 @@ class MongoConf:
     """mongodb 配置文件"""
     # 简历库mongo配置
     resume_host = "171.221.173.155"
+    resume_host = "192.168.3.221"
     resume_port = 27017
     resume_db = "xunying_resume"
     resume_table = "resume_4_1_v3"
@@ -118,6 +119,7 @@ class MongoConf:
 
     # 维度库mongo配置
     dimension_host = "171.221.173.155"
+    dimension_host = "192.168.3.221"
     dimension_port = 27017
     dimension_db = "dimension"
     dimension_table = "dimension"
