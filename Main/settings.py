@@ -127,13 +127,13 @@ class MongoConf:
     dimension_password = "abc@123"
 
     # 授权简历库
-    resume_mongo = pymongo.Connection(resume_host, resume_port)
+    resume_mongo = pymongo.MongoClient(resume_host, resume_port)
     resume_mongo["admin"].authenticate(resume_user, resume_password)
     resume_mongo.safe = True
     resume_collection = resume_mongo[resume_db][resume_table]
 
     # 授权维度库
-    dimension_mongo = pymongo.Connection(dimension_host, dimension_port)
+    dimension_mongo = pymongo.MongoClient(dimension_host, dimension_port)
     dimension_mongo["admin"].authenticate(dimension_user, dimension_password)
     dimension_mongo.safe = True
     dimension_collection = dimension_mongo[dimension_db][dimension_table]
