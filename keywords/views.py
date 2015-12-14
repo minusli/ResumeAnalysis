@@ -53,11 +53,11 @@ def getResumeTag(doc, type):
             resume_info += project["project_desc"]
 
 
-    word_list = get_jd_analysis(resume_info)
+    word_list = get_jd_analysis(resume_info, type)
     return word_list
 
 
-def get_jd_analysis(jd):
+def get_jd_analysis(jd, type):
     word_list = []
     LENGTH = 6
     try:
