@@ -10,5 +10,5 @@ from django.http import HttpResponse
 import json
 
 
-def json_return(flag=True, msg="SUCCESS", data={}):
-    return HttpResponse(json.dumps({'flag': flag, 'msg': msg, 'data': data}))
+def json_return(flag=True, msg="SUCCESS", data={}, code="999"):
+    return HttpResponse(json.dumps({'flag': flag, 'msg': msg, 'data': data, "code": code}))

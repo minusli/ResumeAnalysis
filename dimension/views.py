@@ -20,14 +20,14 @@ def get_dimension(request):
     cv_id = request.POST.get("cv_id", "")
     source = request.POST.get("source", "")
     if not isinstance(cv_id, basestring):
-        return json_return.json_return(False, "cv_id 参数错误")
+        return json_return.json_return(False, "cv_id 参数错误", code="3:001")
     if not isinstance(source, basestring):
-        return json_return.json_return(False, "source 参数错误")
+        return json_return.json_return(False, "source 参数错误", code="3:002")
     mongo_query = {"cv_id": cv_id, "source": source}
     data = settings.MongoConf.dimension_collection.find_one(mongo_query)
     if data and '_id' in data:
         data.pop("_id")
-    return json_return.json_return(data=data)
+    return json_return.json_return(data=data, code="3:999")
 
 
 @csrf_exempt
@@ -35,10 +35,9 @@ def cal_dimension(request):
     # 获取数据
     try:
         data = request.body
-        print data
         resume = json.loads(data)
     except Exception, e:
-        return json_return.json_return(False, "params error:" + str(e))
+        return json_return.json_return(False, "params error:" + str(e), code="4:001")
     # 开始计算
     try:
         cv_id = resume["cv_id"]
@@ -47,7 +46,7 @@ def cal_dimension(request):
         profession = cal_profession_dimension(resume)
         stability = cal_stability_dimension(resume)
     except Exception, e:
-        return json_return.json_return(False, "error in prepare data: " + str(e))
+        return json_return.json_return(False, "error in prepare data: " + str(e), code="4:002")
     # 插入结果
     try:
         settings.MongoConf.dimension_collection.insert({
@@ -58,7 +57,7 @@ def cal_dimension(request):
             "stability": stability,
         })
     except Exception, e:
-        return json_return.json_return(False, "error in insert: " + str(e))
-    return json_return.json_return()
+        return json_return.json_return(False, "error in insert: " + str(e), code="4:003")
+    return json_return.json_return(code="4:999")
 
 
