@@ -85,4 +85,5 @@ def get_english_words(words):
                 word = word.lower()
                 if word == "c":
                     english_words.add(word)
+    english_words -= {"br", "www", "cn", "1000CC"}
     return english_words
