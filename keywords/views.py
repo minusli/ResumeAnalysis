@@ -41,12 +41,17 @@ def resume_tag(request):
 
 def getResumeTag(doc, type):
     resume_info = doc["self_introduction"]
+    if not resume_info:
+        resume_info = ""
     workExperienceList = doc["workExperienceList"]
     projectList = doc["projectList"]
-    for experience in workExperienceList:
-        resume_info += experience["experience_desc"]
-    for project in projectList:
-        resume_info += project["project_desc"]
+    if workExperienceList:
+        for experience in workExperienceList:
+            resume_info += experience["experience_desc"]
+    if projectList:
+        for project in projectList:
+            resume_info += project["project_desc"]
+
 
     word_list = get_jd_analysis(resume_info)
     return word_list
