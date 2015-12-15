@@ -25,6 +25,7 @@ def get_dimension(request):
         return json_return.json_return(False, "source 参数错误", code="3:002")
     mongo_query = {"cv_id": cv_id, "source": source}
     data = settings.MongoConf.dimension_collection.find_one(mongo_query)
+    settings.MongoConf.dimension_mongo.close()
     if data and '_id' in data:
         data.pop("_id")
     return json_return.json_return(data=data, code="3:999")
@@ -56,6 +57,7 @@ def cal_dimension(request):
             "profession": profession,
             "stability": stability,
         })
+        settings.MongoConf.dimension_mongo.close()
     except Exception, e:
         return json_return.json_return(False, "error in insert: " + str(e), code="4:003")
     return json_return.json_return(code="4:999")
