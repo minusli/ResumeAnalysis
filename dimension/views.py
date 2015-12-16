@@ -17,6 +17,7 @@ from analysis import cal_profession_dimension, cal_stability_dimension
 
 @csrf_exempt
 def get_dimension(request):
+    # TODO 日志记录请求参数，返回结果
     # 获取参数并且校验
     if "cv_id" not in request.POST:
         return json_return.json_return(False, standard.PARAM_LACK.code, standard.PARAM_LACK.msg + u": cv_id")
@@ -41,6 +42,7 @@ def get_dimension(request):
 
 @csrf_exempt
 def cal_dimension(request):
+    # TODO 日志记录请求参数，返回结果
     # 获取参数并校验
     try:
         data = request.body
