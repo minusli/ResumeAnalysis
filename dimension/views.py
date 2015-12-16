@@ -41,12 +41,20 @@ def get_dimension(request):
 
 @csrf_exempt
 def cal_dimension(request):
-    # 获取数据
+    # 获取参数并校验
     try:
         data = request.body
         resume = json.loads(data)
     except Exception, e:
-        return json_return.json_return(False, "params error:" + str(e), code="4:001")
+        return json_return.json_return(False, standard.PARAM_FORMAT.code, standard.PARAM_FORMAT.msg + u": 非标准JSON格式")
+    if 'cv_id' not in resume:
+        return json_return.json_return(False, standard.PARAM_LACK.code, standard.PARAM_LACK.msg + u": cv_id")
+    if 'source' not in resume:
+        return json_return.json_return(False, standard.PARAM_LACK.code, standard.PARAM_LACK.msg + u": source")
+    if 'resume_id' not in resume:
+        return json_return.json_return(False, standard.PARAM_LACK.code, standard.PARAM_LACK.msg + u": resume_id")
+    if 'workExperienceList' not in resume:
+        return json_return.json_return(False, standard.PARAM_LACK.code, standard.PARAM_LACK.msg + u": workExperienceList")
     # 开始计算
     try:
         cv_id = resume["cv_id"]
@@ -55,7 +63,7 @@ def cal_dimension(request):
         profession = cal_profession_dimension(resume)
         stability = cal_stability_dimension(resume)
     except Exception, e:
-        return json_return.json_return(False, "error in prepare data: " + str(e), code="4:002")
+        return json_return.json_return(False, standard.INNER_ERROR.code, standard.INNER_ERROR.msg + u": 计算维度出错")
     # 插入结果
     try:
         settings.MongoConf.dimension_collection.insert({
@@ -67,7 +75,8 @@ def cal_dimension(request):
         })
         settings.MongoConf.dimension_mongo.close()
     except Exception, e:
-        return json_return.json_return(False, "error in insert: " + str(e), code="4:003")
-    return json_return.json_return(code="4:999")
+        return json_return.json_return(False, standard.INNER_ERROR.code, standard.INNER_ERROR.msg + u": 维度计算结果入库失败")
+    # 返回
+    return json_return.json_return()
 
 
