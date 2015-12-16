@@ -1,3 +1,4 @@
+# coding=utf-8
 import json
 import traceback
 import jieba
@@ -6,37 +7,37 @@ from django.http.response import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from extract_tags import find_resume_by_id
 from loadFile.constant_position import ConstantPosition
-from utils import json_return
+from utils import json_return, standard
 
 category_keywords = ConstantPosition.category_keywords
 
 
 @csrf_exempt
 def resume_tag(request):
-    if request.method == "POST":
-        son = {}
-        try:
-            tag_list = []
-            flag = True
-            cv_id = request.POST.get("cv_id")
-            source = request.POST.get("source")
-            type = request.POST.get("type")
-            doc = find_resume_by_id(cv_id, source)
-            if doc:
-                tag_list = getResumeTag(doc, type)
-                msg = "SUCCESS"
-            else:
-                flag = False
-                msg = "current resume is missing."
-            son["flag"] = flag
-            son["msg"] = msg
-            son["tag_list"] = tag_list
-        except Exception, e:
-            son["flag"] = False
-            son["msg"] = "program exception:"+str(e)
-            son["tag_list"] = []
-            traceback.print_exc()
-        return json_return.json_return(son["flag"], son["msg"], son["tag_list"])
+    # 获取参数并校验
+    if 'cv_id' not in request.POST:
+        return json_return.json_return(False, standard.PARAM_LACK.code, standard.PARAM_LACK.msg + u": cv_id")
+    if 'source' not in request.POST:
+        return json_return.json_return(False, standard.PARAM_LACK.code, standard.PARAM_LACK.msg + u": source")
+    if 'type' not in request.POST:
+        return json_return.json_return(False, standard.PARAM_LACK.code, standard.PARAM_LACK.msg + u": type")
+    cv_id = request.POST["cv_id"]
+    source = request.POST["source"]
+    type = request.POST["type"]
+    if source not in [u"智联", u"英才", u"前程无忧"]:
+        return json_return.json_return(False, standard.PARAM_RANGE.code, standard.PARAM_RANGE.msg + u": source只能是[智联,英才,前程无忧]之一")
+    if type not in [u"产品", u"市场", u"技术", u"职能", u"设计", u"运营"]:
+        return json_return.json_return(False, standard.PARAM_RANGE.code, standard.PARAM_RANGE.msg + u": type只能是六大类（产品，市场，技术，职能，设计，运营）之一")
+
+    resume = find_resume_by_id(cv_id, source)
+    if not resume:
+        return json_return.json_return(False, standard.RETURN_DATA_NOT_EXISTE.code, standard.RETURN_DATA_NOT_EXISTE.msg + u": 没有该简历")
+    tag_list = []
+    try:
+        tag_list = getResumeTag(resume, type)
+    except Exception, e:
+        return json_return.json_return(False, standard.INNER_ERROR.code, standard.INNER_ERROR.msg + u": 关键词计算错误")
+    return json_return.json_return(data=tag_list)
 
 
 def getResumeTag(doc, type):
