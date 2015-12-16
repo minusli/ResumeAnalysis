@@ -11,5 +11,5 @@ import json
 import standard
 
 
-def json_return(flag=True, msg=standard.SUCCESS.msg, data=None, code=standard.SUCCESS.code):
+def json_return(flag=True, code=standard.SUCCESS.code, msg=standard.SUCCESS.msg, data=None):
     return HttpResponse(json.dumps({'flag': flag, 'msg': msg, 'data': data, "code": code}))
