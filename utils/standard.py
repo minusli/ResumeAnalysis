@@ -8,30 +8,40 @@ sys.setdefaultencoding("utf-8")
 
 
 class SUCCESS:
-    code = '200-000'
-    msg = 'SUCCESS'
+    code = u'200-000'
+    msg = u'SUCCESS'
 
 
 class PARAM_ERROR:
-    code = '001-000'
-    msg = '参数问题'
+    code = u'001-000'
+    msg = u'参数问题'
 
 
 class PARAM_LACK:
-    code = '001-001'
-    msg = '缺少参数错误'
+    code = u'001-001'
+    msg = u'缺少参数错误'
 
 
 class PARAM_FORMAT:
-    code = '001-002'
-    msg = '参数格式错误'
+    code = u'001-002'
+    msg = u'参数格式错误'
 
 
 class PARAM_RANGE:
-    code = '001-003'
-    msg = '参数范围错误'
+    code = u'001-003'
+    msg = u'参数范围错误'
+
+
+class RETURN_DATA_ERROR:
+    code = u'004-000'
+    msg = u'返回数据问题'
+
+
+class RETURN_DATA_NOT_EXISTE:
+    code = u'004-001'
+    msg = u'返回数据不存在'
 
 
 class INNER_ERROR:
-    code = '500-000'
-    msg = '服务器错误，请联系管理员'
+    code = u'500-000'
+    msg = u'服务器错误，请联系管理员'
