@@ -70,9 +70,12 @@ def cal_profession_dimension(resume):
     total_weight = 0
     try:
         for work in resume["workExperienceList"]:
-            months += cal_delta_month(work["start_date"], work["end_date"]) * (weight ** (zhishu))
-            total_weight += weight ** (zhishu)
-            zhishu += zhishu_item
+            try:
+                months += cal_delta_month(work["start_date"], work["end_date"]) * (weight ** (zhishu))
+                total_weight += weight ** (zhishu)
+                zhishu += zhishu_item
+            except Exception, e:
+                pass
     except Exception, e:
         pass
     try:
