@@ -9,6 +9,7 @@ reload(sys)
 sys.setdefaultencoding("utf-8")
 
 from utils import json_return
+from utils import standard
 from Main import settings
 import json
 from analysis import cal_profession_dimension, cal_stability_dimension
@@ -17,18 +18,25 @@ from analysis import cal_profession_dimension, cal_stability_dimension
 @csrf_exempt
 def get_dimension(request):
     # 获取参数并且校验
-    cv_id = request.POST.get("cv_id", "")
-    source = request.POST.get("source", "")
-    if not isinstance(cv_id, basestring):
-        return json_return.json_return(False, "cv_id 参数错误", code="3:001")
-    if not isinstance(source, basestring):
-        return json_return.json_return(False, "source 参数错误", code="3:002")
+    if "cv_id" not in request.POST:
+        return json_return.json_return(False, standard.PARAM_LACK.code, standard.PARAM_LACK.msg + u": cv_id")
+    if "source" not in request.POST:
+        return json_return.json_return(False, standard.PARAM_LACK.code, standard.PARAM_LACK.msg + u": source")
+    if request.POST["source"] not in [u"智联", u"英才", u"前程无忧"]:
+        return json_return.json_return(False, standard.PARAM_RANGE.code, standard.PARAM_RANGE.msg + u": source只能是[智联,英才,前程无忧]之一")
+    cv_id = request.POST["cv_id"]
+    source = request.POST["source"]
+    # 查询数据
     mongo_query = {"cv_id": cv_id, "source": source}
     data = settings.MongoConf.dimension_collection.find_one(mongo_query)
     settings.MongoConf.dimension_mongo.close()
-    if data and '_id' in data:
-        data.pop("_id")
-    return json_return.json_return(data=data, code="3:999")
+    # 判断查询结果，并返回
+    if not data:
+        return json_return.json_return(False, standard.RETURN_DATA_NOT_EXISTE.code, standard.RETURN_DATA_NOT_EXISTE.msg + u": 没有指定简历的维度信息")
+    else:
+        if data and '_id' in data:
+            data.pop("_id")
+        return json_return.json_return(data=data)
 
 
 @csrf_exempt
