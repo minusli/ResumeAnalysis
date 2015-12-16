@@ -49,6 +49,8 @@ def cal_dimension(request):
         resume = json.loads(data)
     except Exception, e:
         return json_return.json_return(False, standard.PARAM_FORMAT.code, standard.PARAM_FORMAT.msg + u": 非标准JSON格式")
+    if not isinstance(resume, dict):
+        return json_return.json_return(False, standard.PARAM_FORMAT.code, standard.PARAM_FORMAT.msg + u": JSON必须是一个字典")
     if 'cv_id' not in resume:
         return json_return.json_return(False, standard.PARAM_LACK.code, standard.PARAM_LACK.msg + u": cv_id")
     if 'source' not in resume:
@@ -57,6 +59,8 @@ def cal_dimension(request):
         return json_return.json_return(False, standard.PARAM_LACK.code, standard.PARAM_LACK.msg + u": resume_id")
     if 'workExperienceList' not in resume:
         return json_return.json_return(False, standard.PARAM_LACK.code, standard.PARAM_LACK.msg + u": workExperienceList")
+    if resume["source"] not in [u"智联", u"英才", u"前程无忧"]:
+        return json_return.json_return(False, standard.PARAM_RANGE.code, standard.PARAM_RANGE.msg + u": source只能是[智联,英才,前程无忧]之一")
     # 开始计算
     try:
         cv_id = resume["cv_id"]
