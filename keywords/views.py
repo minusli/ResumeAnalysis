@@ -19,22 +19,23 @@ def resume_tag(request):
         return json_return.json_return(False, standard.PARAM_LACK.code, standard.PARAM_LACK.msg + u": cv_id")
     if 'source' not in request.POST:
         return json_return.json_return(False, standard.PARAM_LACK.code, standard.PARAM_LACK.msg + u": source")
-    if 'type' not in request.POST:
-        return json_return.json_return(False, standard.PARAM_LACK.code, standard.PARAM_LACK.msg + u": type")
+    # if 'type' not in request.POST:
+    #     return json_return.json_return(False, standard.PARAM_LACK.code, standard.PARAM_LACK.msg + u": type")
     cv_id = request.POST["cv_id"]
     source = request.POST["source"]
-    type = request.POST["type"]
+    # type = request.POST["type"]
     if source not in [u"智联", u"英才", u"前程无忧"]:
         return json_return.json_return(False, standard.PARAM_RANGE.code, standard.PARAM_RANGE.msg + u": source只能是[智联,英才,前程无忧]之一")
-    if type not in [u"产品", u"市场", u"技术", u"职能", u"设计", u"运营"]:
-        return json_return.json_return(False, standard.PARAM_RANGE.code, standard.PARAM_RANGE.msg + u": type只能是六大类（产品，市场，技术，职能，设计，运营）之一")
+    # if type not in [u"产品", u"市场", u"技术", u"职能", u"设计", u"运营"]:
+    #     return json_return.json_return(False, standard.PARAM_RANGE.code, standard.PARAM_RANGE.msg + u": type只能是六大类（产品，市场，技术，职能，设计，运营）之一")
 
     resume = find_resume_by_id(cv_id, source)
     if not resume:
         return json_return.json_return(False, standard.RETURN_DATA_NOT_EXISTE.code, standard.RETURN_DATA_NOT_EXISTE.msg + u": 没有该简历")
-    tag_list = []
+    tag_list = {}
     try:
-        tag_list = getResumeTag(resume, type)
+        for t in ["产品", "市场", "技术", "职能", "设计", "运营"]:
+            tag_list[t] = getResumeTag(resume, t)
     except Exception, e:
         return json_return.json_return(False, standard.INNER_ERROR.code, standard.INNER_ERROR.msg + u": 关键词计算错误")
     return json_return.json_return(data=tag_list)
