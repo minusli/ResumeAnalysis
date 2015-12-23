@@ -34,8 +34,16 @@ def resume_tag(request):
         return json_return.json_return(False, standard.RETURN_DATA_NOT_EXISTE.code, standard.RETURN_DATA_NOT_EXISTE.msg + u": 没有该简历")
     tag_list = {}
     try:
+        type_to_pinyin_map = {
+            u"产品": "chanpin",
+            u"市场": "shichang",
+            u"技术": "jishu",
+            u"职能": "zhineng",
+            u"设计": "sheji",
+            u"运营": "yunying"
+        }
         for t in [u"产品", u"市场", u"技术", u"职能", u"设计", u"运营"]:
-            tag_list[t] = getResumeTag(resume, t)
+            tag_list[type_to_pinyin_map[t]] = getResumeTag(resume, t)
     except Exception, e:
         return json_return.json_return(False, standard.INNER_ERROR.code, standard.INNER_ERROR.msg + u": 关键词计算错误")
     return json_return.json_return(data=tag_list)
