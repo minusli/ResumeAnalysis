@@ -34,7 +34,7 @@ def resume_tag(request):
         return json_return.json_return(False, standard.RETURN_DATA_NOT_EXISTE.code, standard.RETURN_DATA_NOT_EXISTE.msg + u": 没有该简历")
     tag_list = {}
     try:
-        for t in ["产品", "市场", "技术", "职能", "设计", "运营"]:
+        for t in [u"产品", u"市场", u"技术", u"职能", u"设计", u"运营"]:
             tag_list[t] = getResumeTag(resume, t)
     except Exception, e:
         return json_return.json_return(False, standard.INNER_ERROR.code, standard.INNER_ERROR.msg + u": 关键词计算错误")
